@@ -1,0 +1,88 @@
+
+// Tinkercad link https://www.tinkercad.com/things/5CsAPlLRonS-problem-statement/editel?sharecode=FYrCJCVB7iKXJc9aTfzZvrnZpveTiV_az5rzHVrNrUM
+#include <math.h>
+#include <Servo.h>
+#define dirPin 2
+#define stepPin 3
+#define stepsPerRevolution 800
+// for straight line path just fix either the value of x otr y keeping the the value of y as 0
+Servo myservo; 
+Servo myservo1; 
+float pi=3.14159265;
+int l1=22;
+int l2=22;
+
+float x = 10;
+float y = 10;
+//Grade y=135
+//Grad xc=104
+// Left Screw (70.180)
+//Right Screw (-75,175)
+float pos=180;
+float pos1=0;
+
+double q1;
+double q1_;
+double q2;
+double q2_;
+
+
+void setup(){
+
+
+
+  Serial.begin(9600);
+  myservo.attach(8);
+  myservo1.attach(9);
+  pinMode(stepPin, OUTPUT);
+  pinMode(dirPin, OUTPUT);
+  pinMode(11,OUTPUT);
+  digitalWrite(11,HIGH);
+  myservo.write(0);
+  myservo1.write(0);
+  delay(500);
+  // Serial.println("Enter x: \n");
+  // x = Serial.parseInt();
+  // Serial.println("Enter y: \n");
+  // y = Serial.parseInt();
+
+  q2= acos((x*x+ y*y - (l1*l1 + l2*l2))/(2*l1*l2)); 
+  q1= (atan2(y,x)-atan2((l2*sin(q2_)),(l1+l2*cos(q2_))))*180.0/pi;
+  q2_=-acos(((x*x+y*y-l1*l1-l2*l2)/(2*l1*l2)));
+  q1_=(atan2(y,x)+atan2((l2*sin(q2)),(l1+l2*cos(q2_))))*180.0/pi;
+  
+  q2 = q2*180.0/pi;
+  q2_= q2*180.0/pi  ;       
+  
+    
+//}
+}
+
+void loop(){
+  Serial.println(q1);
+  Serial.println(q2);
+  
+//  myservo.write(pos);
+//  myservo1.write(pos1);
+  
+  for (int pos = 0; pos <180-q1; pos++) 
+  {
+    int ang1 = pos+10 - (pos*0.11);
+    myservo.write(ang1);              // tell servo to go to position in variable 'pos'
+    delay(100);                       // waits 15 ms for the servo to reach the position
+  }
+  delay(10);
+
+  for (int pos1 =0; pos1 <q2; pos1++)
+  {
+    int ang2 = pos1-pos1*0.1;
+    myservo1.write(ang2);              // tell servo to go to position in variable 'pos'
+    delay(100);                       // waits 15 ms for the servo to reach the position
+  }
+ 
+  delay(50000);
+  
+
+
+  
+}
